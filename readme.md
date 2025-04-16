@@ -3,7 +3,7 @@
 
 ## Description
 
-This repository contains configuration and guidance for deploying a scalable and highly available WordPress instance using AWS Elastic Container Service (ECS) with the Fargate launch type[cite: 1, 4, 5, 40]. It leverages AWS Application Load Balancer (ALB) for traffic distribution and AWS Relational Database Service (RDS) for the MySQL database backend[cite: 18, 19, 47, 52]. This setup follows best practices for containerized deployments on AWS, simplifying management by using serverless container infrastructure[cite: 5, 71, 73].
+This repository contains configuration and guidance for deploying a scalable and highly available WordPress instance using AWS Elastic Container Service (ECS) with the Fargate launch type. It leverages AWS Application Load Balancer (ALB) for traffic distribution and AWS Relational Database Service (RDS) for the MySQL database backend. This setup follows best practices for containerized deployments on AWS, simplifying management by using serverless container infrastructure.
 
 ## Table of Contents
 
@@ -27,11 +27,11 @@ This repository contains configuration and guidance for deploying a scalable and
 
 The deployment utilizes the following AWS services:
 
-* **AWS ECS (Fargate):** Hosts the WordPress container without needing to manage underlying EC2 instances[cite: 3, 14, 40].
-* **AWS Application Load Balancer (ALB):** Distributes incoming web traffic across the running WordPress container tasks[cite: 18, 47].
-* **AWS RDS (MySQL):** Provides a managed MySQL database for WordPress data storage[cite: 19, 52, 55].
-* **AWS VPC:** Networking infrastructure to host the resources[cite: 44, 52].
-* **AWS Secrets Manager (Optional but Recommended):** For managing database credentials securely[cite: 56, 66].
+* **AWS ECS (Fargate):** Hosts the WordPress container without needing to manage underlying EC2 instances.
+* **AWS Application Load Balancer (ALB):** Distributes incoming web traffic across the running WordPress container tasks.
+* **AWS RDS (MySQL):** Provides a managed MySQL database for WordPress data storage.
+* **AWS VPC:** Networking infrastructure to host the resources.
+* **AWS Secrets Manager (Optional but Recommended):** For managing database credentials securely.
 
 ## Prerequisites
 
@@ -47,63 +47,63 @@ Follow these steps to deploy the WordPress application:
 ### 1. Create ECS Cluster
 
 * Create an ECS Cluster using the AWS Management Console or AWS CLI.
-* Choose the **AWS Fargate** compute option[cite: 16].
+* Choose the **AWS Fargate** compute option[  : 16].
 
 ### 2. Create RDS MySQL Instance
 
-* Launch an RDS instance using the MySQL engine[cite: 55].
+* Launch an RDS instance using the MySQL engine[  : 55].
 * **Important:**
-    * Deploy the RDS instance within the same VPC as your ECS Cluster[cite: 52].
-    * Configure the RDS instance security group to allow inbound traffic on port 3306 (MySQL default) from the ECS Service's security group[cite: 53, 61].
-    * Disable public access for security[cite: 59].
-    * Note down the database endpoint, username, and password (consider using AWS Secrets Manager for the password)[cite: 56, 65, 66].
-    * Specify an initial database name during creation[cite: 63].
+    * Deploy the RDS instance within the same VPC as your ECS Cluster[  : 52].
+    * Configure the RDS instance security group to allow inbound traffic on port 3306 (MySQL default) from the ECS Service's security group[  : 53, 61].
+    * Disable public access for security[  : 59].
+    * Note down the database endpoint, username, and password (consider using AWS Secrets Manager for the password)[  : 56, 65, 66].
+    * Specify an initial database name during creation[  : 63].
 
 ### 3. Create ECS Task Definition
 
-* Define how the WordPress container should run[cite: 8, 26, 27].
-* Use the public `wordpress` Docker image or specify your own image (e.g., from ECR)[cite: 17, 29].
-* Specify CPU and Memory requirements (e.g., 1 vCPU, 3 GB Memory)[cite: 33].
-* Configure port mapping (e.g., map container port 80 to host port 80)[cite: 33].
-* Set the Network Mode to `awsvpc` (required for Fargate)[cite: 33].
-* Assign an `ecsTaskExecutionRole` to allow ECS to pull images and log to CloudWatch[cite: 33, 34, 37].
-* You can create this using the AWS Console UI or by providing a JSON definition (see example below)[cite: 28, 33].
+* Define how the WordPress container should run[  : 8, 26, 27].
+* Use the public `wordpress` Docker image or specify your own image (e.g., from ECR)[  : 17, 29].
+* Specify CPU and Memory requirements (e.g., 1 vCPU, 3 GB Memory)[  : 33].
+* Configure port mapping (e.g., map container port 80 to host port 80)[  : 33].
+* Set the Network Mode to `awsvpc` (required for Fargate)[  : 33].
+* Assign an `ecsTaskExecutionRole` to allow ECS to pull images and log to CloudWatch[  : 33, 34, 37].
+* You can create this using the AWS Console UI or by providing a JSON definition (see example below)[  : 28, 33].
 
 ### 4. Create ECS Service
 
-* Within your ECS Cluster, create a new Service[cite: 24].
-* Select the **Fargate** launch type[cite: 40].
+* Within your ECS Cluster, create a new Service[  : 24].
+* Select the **Fargate** launch type[  : 40].
 * Choose the Task Definition created in the previous step.
-* Set the desired number of tasks (e.g., 2 for high availability)[cite: 42].
+* Set the desired number of tasks (e.g., 2 for high availability)[  : 42].
 * Configure networking:
-    * Select your VPC[cite: 44].
-    * Choose subnets across multiple Availability Zones for high availability[cite: 44].
-    * Create or select a security group that allows inbound traffic on port 80 from the ALB[cite: 45, 46].
+    * Select your VPC[  : 44].
+    * Choose subnets across multiple Availability Zones for high availability[  : 44].
+    * Create or select a security group that allows inbound traffic on port 80 from the ALB[  : 45, 46].
 * Configure an Application Load Balancer (ALB):
     * Create a new ALB or select an existing one.
-    * Set up a listener for HTTP on port 80[cite: 47].
+    * Set up a listener for HTTP on port 80[  : 47].
     * Create a target group that points to the IP addresses of the tasks, using port 80 and the HTTP protocol. Ensure health checks are configured appropriately.
-* Review and create the service. It may take a few minutes for the tasks to start and register with the ALB[cite: 48].
+* Review and create the service. It may take a few minutes for the tasks to start and register with the ALB[  : 48].
 
 ### 5. Connect WordPress to Database
 
-* Once the service is running, access the WordPress setup page using the ALB's DNS name[cite: 49, 50].
+* Once the service is running, access the WordPress setup page using the ALB's DNS name[  : 49, 50].
 * When prompted, enter the database details gathered during the RDS setup:
-    * Database Name [cite: 68]
-    * Username [cite: 68]
-    * Password (retrieved from Secrets Manager if used) [cite: 66, 68]
-    * Database Host (the RDS instance endpoint) [cite: 68]
-* Run the WordPress installation[cite: 68].
+    * Database Name [  : 68]
+    * Username [  : 68]
+    * Password (retrieved from Secrets Manager if used) [  : 66, 68]
+    * Database Host (the RDS instance endpoint) [  : 68]
+* Run the WordPress installation[  : 68].
 
 ## Accessing the Application
 
-After completing the WordPress setup, you can access your site using the DNS name of the Application Load Balancer[cite: 49, 69, 70]. You can also map a custom domain name to the ALB DNS name using Route 53 or your DNS provider[cite: 21].
+After completing the WordPress setup, you can access your site using the DNS name of the Application Load Balancer[  : 49, 69, 70]. You can also map a custom domain name to the ALB DNS name using Route 53 or your DNS provider[  : 21].
 
 ## Configuration Details
 
 ### Task Definition Example
 
-Here is an example JSON structure for the Task Definition (remember to replace `<AWS_ACCOUNT_ID>` with your actual AWS Account ID)[cite: 33]:
+Here is an example JSON structure for the Task Definition (remember to replace `<AWS_ACCOUNT_ID>` with your actual AWS Account ID)[  : 33]:
 
 ```json
 {
@@ -139,8 +139,8 @@ Here is an example JSON structure for the Task Definition (remember to replace `
 
 * **Security Groups:**
     * ALB Security Group: Allow inbound traffic on port 80 (HTTP) or 443 (HTTPS) from the internet (0.0.0.0/0).
-    * ECS Service Security Group: Allow inbound traffic on port 80 from the ALB Security Group[cite: 46]. Allow outbound traffic as needed.
-    * RDS Security Group: Allow inbound traffic on port 3306 from the ECS Service Security Group[cite: 53, 61].
+    * ECS Service Security Group: Allow inbound traffic on port 80 from the ALB Security Group[  : 46]. Allow outbound traffic as needed.
+    * RDS Security Group: Allow inbound traffic on port 3306 from the ECS Service Security Group[  : 53, 61].
 
 ## Contributing
 
@@ -153,7 +153,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## Acknowledgements
 
-Based on the guide "Streamlining Containerized Deployments: A Comprehensive Guide to AWS ECS and WordPress Integration" by Shivam Soni[cite: 1].
+Based on the guide "Streamlining Containerized Deployments: A Comprehensive Guide to AWS ECS and WordPress Integration" by Shivam Soni[  : 1].
 ```
 
-Remember to replace placeholders, review the security group rules for your specific needs, and add any specific configuration details relevant to your repository's contents (like CI/CD pipeline information, environment variable setup, etc.)[cite: 74].
+Remember to replace placeholders, review the security group rules for your specific needs, and add any specific configuration details relevant to your repository's contents (like CI/CD pipeline information, environment variable setup, etc.)[  : 74].
