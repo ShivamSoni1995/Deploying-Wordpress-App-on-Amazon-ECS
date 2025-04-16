@@ -9,15 +9,15 @@
  * [Architecture](#architecture) 
  * [Prerequisites](#prerequisites) 
  * [Deployment Steps](#deployment-steps) 
-     * [1. Create ECS Cluster](#1-create-ecs-cluster) 
-     * [2. Create RDS MySQL Instance](#2-create-rds-mysql-instance) 
-     * [3. Create ECS Task Definition](#3-create-ecs-task-definition) 
-     * [4. Create ECS Service](#4-create-ecs-service) 
-     * [5. Connect WordPress to Database](#5-connect-wordpress-to-database) 
+ * [1. Create ECS Cluster](#1-create-ecs-cluster) 
+ * [2. Create RDS MySQL Instance](#2-create-rds-mysql-instance) 
+ * [3. Create ECS Task Definition](#3-create-ecs-task-definition) 
+ * [4. Create ECS Service](#4-create-ecs-service) 
+ * [5. Connect WordPress to Database](#5-connect-wordpress-to-database) 
  * [Accessing the Application](#accessing-the-application) 
  * [Configuration Details](#configuration-details) 
-     * [Task Definition Example](#task-definition-example) 
-     * [Networking](#networking) 
+ * [Task Definition Example](#task-definition-example) 
+ * [Networking](#networking) 
  * [Contributing](#contributing) 
  * [License](#license) 
  * [Acknowledgements](#acknowledgements) 
@@ -51,11 +51,11 @@
  ### 2. Create RDS MySQL Instance 
 
  * Launch an RDS instance using the MySQL engine. 
- * **Important:**     * Deploy the RDS instance within the same VPC as your ECS Cluster. 
-     * Configure the RDS instance security group to allow inbound traffic on port 3306 (MySQL default) from the ECS Service's security group. 
-     * Disable public access for security. 
-     * Note down the database endpoint, username, and password (consider using AWS Secrets Manager for the password). 
-     * Specify an initial database name during creation. 
+ * **Important:** Deploy the RDS instance within the same VPC as your ECS Cluster. 
+ * Configure the RDS instance security group to allow inbound traffic on port 3306 (MySQL default) from the ECS Service's security group. 
+ * Disable public access for security. 
+ * Note down the database endpoint, username, and password (consider using AWS Secrets Manager for the password). 
+ * Specify an initial database name during creation. 
 
  ### 3. Create ECS Task Definition 
 
@@ -74,23 +74,23 @@
  * Choose the Task Definition created in the previous step. 
  * Set the desired number of tasks (e.g., 2 for high availability). 
  * Configure networking: 
-     * Select your VPC. 
-     * Choose subnets across multiple Availability Zones for high availability. 
-     * Create or select a security group that allows inbound traffic on port 80 from the ALB. 
+ * Select your VPC. 
+ * Choose subnets across multiple Availability Zones for high availability. 
+ * Create or select a security group that allows inbound traffic on port 80 from the ALB. 
  * Configure an Application Load Balancer (ALB): 
-     * Create a new ALB or select an existing one. 
-     * Set up a listener for HTTP on port 80. 
-     * Create a target group that points to the IP addresses of the tasks, using port 80 and the HTTP protocol. Ensure health checks are configured appropriately. 
+ * Create a new ALB or select an existing one. 
+ * Set up a listener for HTTP on port 80. 
+ * Create a target group that points to the IP addresses of the tasks, using port 80 and the HTTP protocol. Ensure health checks are configured appropriately. 
  * Review and create the service. It may take a few minutes for the tasks to start and register with the ALB. 
 
  ### 5. Connect WordPress to Database 
 
  * Once the service is running, access the WordPress setup page using the ALB's DNS name. 
  * When prompted, enter the database details gathered during the RDS setup: 
-     * Database Name 
-     * Username 
-     * Password (retrieved from Secrets Manager if used) 
-     * Database Host (the RDS instance endpoint) 
+ * Database Name 
+ * Username 
+ * Password (retrieved from Secrets Manager if used) 
+ * Database Host (the RDS instance endpoint) 
  * Run the WordPress installation. 
 
  ## Accessing the Application 
