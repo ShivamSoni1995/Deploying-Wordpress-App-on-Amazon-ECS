@@ -99,35 +99,6 @@
 
  ## Configuration Details 
 
- ### Task Definition Example 
+ ### [Task Definition](./Task%20Definition)
 
- Here is an example JSON structure for the Task Definition (remember to replace `<AWS_ACCOUNT_ID>` with your actual AWS Account ID): 
-
- ```json 
- { 
-   "requiresCompatibilities": [ 
-     "FARGATE" 
-   ], 
-   "family": "ecs-demo-wordpress", 
-   "containerDefinitions": [ 
-     { 
-       "name": "ecs-demo-wordpress", 
-       "image": "wordpress", 
-       "essential": true, 
-       "portMappings": [ 
-         { 
-           "name": "http", 
-           "containerPort": 80, 
-           "hostPort": 80, 
-           "protocol": "tcp", 
-           "appProtocol": "http" 
-         } 
-       ] 
-     } 
-   ], 
-   "volumes": [], 
-   "networkMode": "awsvpc", 
-   "memory": "3 GB", 
-   "cpu": "1 vCPU", 
-   "executionRoleArn": "arn:aws:iam::<AWS_ACCOUNT_ID>:role/ecsTaskExecutionRole" 
- }
+ 
